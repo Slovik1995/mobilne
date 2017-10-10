@@ -16,6 +16,20 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
+        
+        let url = URL(string: "https://isebi.net/albums.php")
+        URLSession.shared.dataTask(with:url!, completionHandler: {(data, response, error) in
+            guard let data = data, error == nil else { return }
+            
+            do {
+                let json = try JSONSerialization.jsonObject(with: data, options: .allowFragments) as! [String:Any]
+                let posts = json["posts"] as? [[String: Any]] ?? []
+                print(posts)
+            } catch let error as NSError {
+                print(error)
+            }
+        }).resume()
+        
         return true
     }
 
